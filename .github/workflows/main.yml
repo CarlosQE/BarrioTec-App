@@ -1,0 +1,21 @@
+name: .NET Build CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '7.0.x' # Ajusta si usas otra versión
+    - name: Restore dependencies
+      run: dotnet restore TiendaApp/TiendaApp.csproj
+    - name: Build
+      run: dotnet build TiendaApp/TiendaApp.csproj --no-restore
