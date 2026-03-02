@@ -1,0 +1,28 @@
+using System;
+using System.Data.SqlClient;
+
+namespace TiendaApp.Data
+{
+    public class DbContext
+    {
+        // Implementación Singleton con "Lazy" para que sea Thread-Safe (Nivel Estratégico)
+        private static readonly Lazy<DbContext> _instance = new Lazy<DbContext>(() => new DbContext());
+        
+        // ¡Importante! Si usan Autenticación de Windows en el laboratorio, usen esta cadena:
+        private readonly string _connStr = "Server=localhost;Database=TiendaDb;Trusted_Connection=True;";
+
+        // Constructor privado para evitar instanciación externa
+        private DbContext() { }
+
+        public static DbContext Instance
+        {
+            get { return _instance.Value; }
+        }
+
+        // Método para obtener la conexión
+        public SqlConnection GetConnection()
+        {
+            return new SqlConnection(_connStr);
+        }
+    }
+}
