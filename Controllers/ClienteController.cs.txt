@@ -1,0 +1,54 @@
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using TiendaApp.Data;
+using TiendaApp.Models;
+
+namespace TiendaApp.Controllers
+{
+    public class ClienteController
+    {
+        // Método para listar o buscar clientes (Sirve para el CRUD y para la ventana Modal de Búsqueda)
+        public List<Cliente> BuscarClientes(string filtro = "")
+        {
+            List<Cliente> lista = new List<Cliente>();
+            using (SqlConnection conn = DbContext.Instance.GetConnection())
+            {
+                // Usamos parámetros para prevenir SQL Injection (Nivel Estratégico)
+                string sql = "SELECT Id, Nombre, NIT FROM Clientes WHERE Nombre LIKE @filtro OR NIT LIKE @filtro";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@filtro", "%" + filtro + "%");
+
+                conn.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        lista.Add(new Cliente
+                        {
+                            Id = Convert.ToInt32(reader["Id"]),
+                            Nombre = reader["Nombre"].ToString(),
+                            NIT = reader["NIT"].ToString()
+                        });
+                    }
+                }
+            }
+            return lista;
+        }
+
+        // Método para agregar un nuevo cliente
+        public void AgregarCliente(Cliente cliente)
+        {
+            using (SqlConnection conn = DbContext.Instance.GetConnection())
+            {
+                string sql = "INSERT INTO Clientes (Nombre, NIT) VALUES (@nombre, @nit)";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@nombre", cliente.Nombre);
+                cmd.Parameters.AddWithValue("@nit", cliente.NIT);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+    }
+}
