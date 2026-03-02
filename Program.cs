@@ -1,16 +1,23 @@
-namespace TiendaApp;
+using System;
+using System.Windows.Forms;
+using TiendaApp.Views; // Importamos la carpeta de vistas
 
-static class Program
+namespace TiendaApp
 {
-    /// <summary>
-    ///  The main entry point for the application.
-    /// </summary>
-    [STAThread]
-    static void Main()
+    internal static class Program
     {
-        // To customize application configuration such as set high DPI settings or default font,
-        // see https://aka.ms/applicationconfiguration.
-        ApplicationConfiguration.Initialize();
-        Application.Run(new Form1());
-    }    
+        /// <summary>
+        /// Punto de entrada principal para la aplicación.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            
+            // AQUÍ ESTÁ EL CAMBIO CLAVE: 
+            // Le decimos al sistema que arranque la aplicación abriendo el Menú Principal
+            Application.Run(new frmMenuPrincipal());
+        }
+    }
 }
